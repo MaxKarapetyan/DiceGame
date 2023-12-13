@@ -22,6 +22,7 @@ let score = [0, 0];
 const btnRollLogic = function () {
   diceImg.classList.remove('hidden');
   randomNumber = Math.trunc(Math.random() * 6) + 1;
+  console.log(`randomNumber ${randomNumber}`);
   diceImg.src = ` dice-${randomNumber}.png`;
   //Cheking if the number is not 1
   if (randomNumber !== 1) {
@@ -45,11 +46,15 @@ const init = function () {
   score_1.textContent = 0;
   score = [0, 0];
   currentScore = 0;
+  console.log(`active player ${activePlayer}`);
+  document.querySelector(`.player--1`).classList.remove('player--activeNow');
+  document.querySelector(`.player--0`).classList.remove('player--activeNow');
+  document.querySelector('.player--0').classList.remove('player--winner');
+  document.querySelector('.player--1').classList.remove('player--winner');
   document
     .querySelector(`.player--${activePlayer}`)
-    .classList.remove('player--winner');
+    .classList.add('player--activeNow');
   btnRoll.addEventListener('click', btnRollLogic);
-  activePlayer = activePlayer === 0 ? 1 : 0;
 };
 init();
 
@@ -75,14 +80,16 @@ btnRoll.addEventListener('click', btnRollLogic);
 
 //Hold button --check win -- else switch player
 btnHold.addEventListener('click', function () {
-  if (score[activePlayer] + currentScore >= 50) {
+  if (score[activePlayer] + currentScore >= 20) {
     document.getElementById(`score--${activePlayer}`).textContent =
       score[activePlayer] + currentScore;
     document.getElementById(`current--${activePlayer}`).textContent = 0;
-
     document
       .querySelector(`.player--${activePlayer}`)
       .classList.add('player--winner');
+
+    score[0] > score[1] ? (activePlayer = 1) : (activePlayer = 0);
+
     btnRoll.removeEventListener('click', btnRollLogic);
   } else {
     switchPlayer();
